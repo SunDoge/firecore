@@ -11,6 +11,7 @@ def find_free_port() -> int:
         s.bind(('', 0))
         _host, port = s.getsockname()
 
+    logger.debug("found a free port: {}", port)
     return port
 
 
