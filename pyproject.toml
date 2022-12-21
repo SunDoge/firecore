@@ -1,0 +1,13 @@
+[project]
+name = "firecore"
+version = "0.0.1"
+description = ""
+authors = []
+dependencies = [
+    "loguru",
+    "rjsonnet",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
