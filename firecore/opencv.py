@@ -1,5 +1,7 @@
-from loguru import logger
+from firecore.logging import get_logger
 import numpy as np
+
+logger = get_logger(__name__)
 
 try:
     import cv2

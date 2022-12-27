@@ -1,7 +1,9 @@
 import socket
-from loguru import logger
+from firecore.logging import get_logger
 import sys
 import resource
+
+logger = get_logger(__name__)
 
 
 def find_free_port() -> int:
@@ -11,7 +13,7 @@ def find_free_port() -> int:
         s.bind(('', 0))
         _host, port = s.getsockname()
 
-    logger.debug("found a free port: {}", port)
+    logger.debug("found a free port", port=port)
     return port
 
 
@@ -25,5 +27,5 @@ def ulimit_n_max():
 
     _soft_limit, hard_limit = resource.getrlimit(resource.RLIMIT_NOFILE)
 
-    logger.warning('setting ulimit -n %d', hard_limit)
+    logger.debug('setting ulimit -n %d', hard_limit)
     resource.setrlimit(resource.RLIMIT_NOFILE, (hard_limit, hard_limit))

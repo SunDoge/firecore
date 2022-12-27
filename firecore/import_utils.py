@@ -1,6 +1,8 @@
 from typing import Union, Any
 import importlib
-from loguru import logger
+from firecore.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 def require(name: str):
@@ -10,5 +12,5 @@ def require(name: str):
     module_name, _sep, attribute_name = name.rpartition('.')
     module = importlib.import_module(module_name)
     attribute = getattr(module, attribute_name)
-    logger.debug('import {} from {}', attribute, name)
+    logger.debug('import `%s` from `%s`', attribute_name, module_name)
     return attribute

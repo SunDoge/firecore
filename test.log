@@ -1,0 +1,4 @@
+{"a": "b", "event": "test", "logger": "__main__", "level": "info", "timestamp": "2022-12-27 08:36:51"}
+{"a": "b", "event": "test", "logger": "__main__", "level": "info", "timestamp": "2022-12-27 08:37:00"}
+{"a": "b", "event": "test", "logger": "__main__", "level": "info", "timestamp": "2022-12-27 08:37:41"}
+{"qwer": "fda", "a": 1, "b": 2, "c": 3, "acc": 100.0, "event": "fsdfasdf", "logger": "__main__", "level": "warning", "timestamp": "2022-12-27 08:37:41"}
