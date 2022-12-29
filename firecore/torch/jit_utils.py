@@ -1,7 +1,9 @@
 from pathlib import Path
 import functools
 import torch
-from loguru import logger
+from firecore.logging import get_logger
+
+logger = get_logger(__name__)
 
 
 class AutoExporter:
