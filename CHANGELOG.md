@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Remove `loguru` from dependencies, use `structlog` intead.
+- Add `resolve` function.
 
 
 ## [0.2.0] - 2022-12-27
