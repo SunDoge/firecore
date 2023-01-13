@@ -1,29 +1,11 @@
 import rjsonnet
-import os
 from typing import Optional, Union, List, Dict, Tuple, Callable, overload
+import warnings
 
+
+warnings.warn("don't use this module, use `rjsonnet` instead")
 
 ImportCallback = Callable[[str, str], Tuple[str, Optional[str]]]
-
-
-def try_path(dir: str, rel: str):
-    """
-    Returns content if worked, None if file not found, or throws an exception
-    """
-
-    full_path = os.path.join(dir, rel)
-
-    if not os.path.isfile(full_path):
-        return full_path, None
-    with open(full_path) as f:
-        return full_path, f.read()
-
-
-def default_import_callback(dir: str, rel: str):
-    full_path, content = try_path(dir, rel)
-    if content:
-        return full_path, content
-    raise RuntimeError('File not found')
 
 
 @overload
@@ -38,21 +20,20 @@ def evaluate_file(
     tla_vars: Dict[str, str] = {},
     tla_codes: Dict[str, str] = {},
     max_trace: int = 20,
-    import_callback: ImportCallback = default_import_callback,
+    import_callback: Optional[ImportCallback] = None,
     native_callbacks: Dict[str, Tuple[str, Callable]] = {},
 ) -> str: ...
 
 
 def evaluate_file(
     filename: str,
-    import_callback=default_import_callback,
     **kwargs,
 ) -> str:
     """eval file
     Args:
         filename: jsonnet file
     """
-    return rjsonnet.evaluate_file(filename, import_callback=import_callback, **kwargs)
+    return rjsonnet.evaluate_file(filename, **kwargs)
 
 
 @overload
@@ -68,7 +49,7 @@ def evaluate_snippet(
     tla_vars: Dict[str, str] = {},
     tla_codes: Dict[str, str] = {},
     max_trace: int = 20,
-    import_callback: ImportCallback = default_import_callback,
+    import_callback: Optional[ImportCallback] = None,
     native_callbacks: Dict[str, Tuple[str, Callable]] = {},
 ) -> str: ...
 
@@ -76,7 +57,6 @@ def evaluate_snippet(
 def evaluate_snippet(
     filename: str,
     snippet: str,
-    import_callback=default_import_callback,
     **kwargs,
 ) -> str:
     """eval snippet
@@ -84,7 +64,4 @@ def evaluate_snippet(
         filename: fake name for snippet
         expr: the snippet
     """
-    return rjsonnet.evaluate_snippet(filename, snippet, import_callback=import_callback, **kwargs)
-
-
-
+    return rjsonnet.evaluate_snippet(filename, snippet, **kwargs)

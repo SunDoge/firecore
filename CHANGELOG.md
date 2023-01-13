@@ -12,15 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `config.from_file` and `config.from_snippet`
-- export `config`
-- export `resolve`
+- Export `config`
+- Export `resolve`
 
+### Changed
+
+- Remove `jsonnet_loader` since `rjsonnet` has functional default import callback, please use `firecore.config` instead.
 
 ## [0.3.1] - 2022-01-11
 
 ### Fixed
 
-- export `logging`
+- Export `logging`
 
 
 ## [0.3.0] - 2022-01-11

@@ -1,6 +1,8 @@
-from .jsonnet_loader import evaluate_file, evaluate_snippet
+from rjsonnet import evaluate_file, evaluate_snippet
 import json
 from typing import Dict, Any, Union
+
+
 
 
 def from_file(filename: str, **kwargs) -> Dict[str, Any]:
