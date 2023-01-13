@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2022-01-13
+
+### Added
+
+- `config.from_file` and `config.from_snippet`
+- export `config`
+- export `resolve`
+
 
 ## [0.3.1] - 2022-01-11
 
