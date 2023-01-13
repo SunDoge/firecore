@@ -1,16 +1,16 @@
 {
   linkedList(cfg)::
     local keys = std.objectFields(cfg);
-    local tail = [k for k in keys if cfg[k].next == null][0];  // string
-    local parents = { [cfg[k].next]: k for k in keys if k != tail };  // Map<string, string>
-    local f(curr) = if std.objectHas(parents, curr) then f(parents[curr]) + [curr] else [curr];
-    local order = f(tail);
-    { [k]: cfg[k] for k in order }
+    local nexts = [cfg[k].next for k in keys];
+    local head = std.setDiff(keys, nexts)[0];
+    local f(curr) = if cfg[curr].next != null then [cfg[curr]] + f(cfg[curr].next) else [cfg[curr]];
+    f(head)
   ,
 
   abc: self.linkedList({
-    a: { next:: 'b' },
-    b: { next:: 'c' },
-    c: { next:: null },
+    d: { name: 'd', next:: null },
+    a: { name: 'a', next:: 'b' },
+    b: { name: 'b', next:: 'c' },
+    c: { name: 'c', next:: 'd' },
   }),
 }
