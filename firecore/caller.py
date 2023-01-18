@@ -15,6 +15,9 @@ class Caller:
         2. output must be dict or 1 object or tuple/list
         """
 
+        assert isinstance(in_rules, dict)
+        assert isinstance(out_rules, dict)
+
         self._func = func
         self._in_rules = in_rules
         self._out_rules = out_rules
@@ -30,15 +33,10 @@ class Caller:
 
         new_out = out
         if self._out_rules:
-            if isinstance(self._out_rules, list):
-                if not isinstance(out, tuple):
-                    out = (out,)
-                new_out = {k: v for k, v in zip(self._out_rules, out)}
-            elif isinstance(self._out_rules, dict):
-                assert isinstance(out, dict)
-                new_out = {
-                    new_key: out[old_key]
-                    for new_key, old_key in self._out_rules.items()
-                }
+            assert isinstance(out, dict)
+            new_out = {
+                new_key: out[old_key]
+                for new_key, old_key in self._out_rules.items()
+            }
 
         return new_out

@@ -28,6 +28,9 @@ class AverageMeter(BaseMeter):
     def avg(self) -> Tensor:
         return self._sum / self._count
 
+    def val(self) -> Tensor:
+        return self._val
+
     def sync(self):
         promise_count = dist.all_reduce(
             self._count, op=dist.ReduceOp.SUM, async_op=True)
