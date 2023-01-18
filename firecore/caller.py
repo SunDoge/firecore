@@ -12,7 +12,7 @@ class Caller:
         """
         Some limitations:
         1. input must be kwargs
-        2. output must be dict or 1 object or tuple/list
+        2. output must be dict or None
         """
 
         assert isinstance(in_rules, dict)
