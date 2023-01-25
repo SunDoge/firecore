@@ -1,4 +1,4 @@
-from firecore.caller import Caller
+from firecore.adapter import Adapter
 
 
 def criterion(*, pred, target):
@@ -10,27 +10,27 @@ def model(*, image, text, **kwargs):
 
 
 def test_empty():
-    caller = Caller(criterion)
+    caller = Adapter()(criterion)
     out = caller(pred=1, target=2)
     assert out['loss'] == 1
 
 
 def test_in_rules():
-    caller = Caller(criterion, in_rules=dict(pred='output', target='label'))
+    caller = Adapter(in_rules=dict(pred='output', target='label'))(criterion)
     out = caller(output=1, label=2)
     assert out['loss'] == 1
 
 
 def test_out_rules_list():
-    caller = Caller(criterion, in_rules=dict(
-        pred='output', target='label'), out_rules={'loss1': 'loss'})
+    caller = Adapter(in_rules=dict(pred='output', target='label'),
+                     out_rules={'loss1': 'loss'})(criterion)
     out = caller(output=1, label=2)
     assert out['loss1'] == 1
 
 
 def test_out_rules_dict():
-    caller = Caller(model, in_rules=dict(
-        image='img', text='label'), out_rules=dict(image='pred_image', text='pred_text'))
+    caller = Adapter(in_rules=dict(image='img', text='label'), out_rules=dict(
+        image='pred_image', text='pred_text'))(model)
     out = caller(img=1, label=2)
     assert out['image'] == 1
     assert out['text'] == 2

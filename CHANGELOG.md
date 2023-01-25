@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.0] - 2022-01-17
+## [0.5.0] - 2022-01-25
 
 ### Added
 
-- `firecore.caller.Caller` for input/output name rewriting.
+- `firecore.adapter.adapt` for input/output name rewriting.
+
+### Changed
+
+- `torch` helper functions are moved to another package.
 
 ## [0.4.0] - 2022-01-13
 
@@ -69,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.4.0...HEAD
+[0.5.0]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.2.1...v0.3.0
