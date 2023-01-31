@@ -1,9 +1,10 @@
-from typing import Dict, Any, Callable
+from typing import Dict, Any, Callable, Optional
 import functools
 
 
-def adapt(inputs: Dict[str, Any], rules: Dict[str, str] = {}) -> Dict[str, Any]:
+def adapt(inputs: Dict[str, Any], rules: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
     outputs = inputs
+    # Not None and not empty dict
     if rules:
         outputs = {
             new_key: inputs[old_key]
