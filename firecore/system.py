@@ -1,9 +1,9 @@
 import socket
-from firecore.logging import get_logger
+import logging
 import sys
 import resource
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def find_free_port() -> int:

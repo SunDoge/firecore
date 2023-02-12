@@ -1,9 +1,9 @@
 from .import_utils import require
 from typing import Dict, Any, List
-from firecore.logging import get_logger
+import logging
 import functools
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 KEY_CALL = '_call'
 KEY_PARTIAL = '_partial'

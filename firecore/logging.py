@@ -1,94 +1,53 @@
-import sys
-import structlog
-import logging.config
 import logging
-
 from typing import Optional
+import sys
+
+logger = logging.getLogger(__name__)
+
+# _MODULE = '{module:s}:{funcName:s}:{lineno:d}'
+
+# FORMAT = '{asctime:s} | {levelname:8s} | {message:s}'
+
+FORMAT = '{asctime:s} | {levelname:8s} | {module:s}:{funcName:s}:{lineno:d} - {message:s}'
 
 
-def init(filename: Optional[str] = None, level: str = "INFO"):
-    timestamper = structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S")
-    pre_chain = [
-        structlog.stdlib.add_log_level,
-        structlog.stdlib.ExtraAdder(),
-        timestamper
-    ]
+def init(filename: Optional[str] = None, local_rank: int = 0, level: int = logging.INFO):
 
-    handlers = {
-        "default": {
-            "level": level,
-            "class": "logging.StreamHandler",
-            "formatter": "console",
-        },
-    }
+    formatter = logging.Formatter(fmt=FORMAT, style='{')
+
+    handlers = []
+
+    if local_rank == 0:
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        handlers.append(console_handler)
 
     if filename:
-        handlers['file'] = {
-            "level": level,
-            "class": "logging.handlers.WatchedFileHandler",
-            "filename": filename,
-            "formatter": "json",
-        }
+        file_handler = logging.FileHandler(filename)
+        file_handler.setFormatter(formatter)
+        handlers.append(file_handler)
 
-    logging.config.dictConfig({
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "json": {
-                "()": structlog.stdlib.ProcessorFormatter,
-                "processors": [
-                    structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-                    structlog.processors.JSONRenderer(),
-                ],
-                "foreign_pre_chain": pre_chain,
-            },
-            "console": {
-                "()": structlog.stdlib.ProcessorFormatter,
-                "processors": [
-                    structlog.stdlib.ProcessorFormatter.remove_processors_meta,
-                ] + _get_console_output_processors(),
-                "foreign_pre_chain": pre_chain,
-            }
-        },
-        "handlers": handlers,
-        "loggers": {
-            "": {
-                "handlers": ["default"] if not filename else ["default", "file"],
-                "level": level,
-                "propagate": True,
-            }
-        }
-    })
+    # log exceptions
+    sys.excepthook = handle_exception
 
-    structlog.configure(
-        processors=[
-            structlog.stdlib.add_logger_name,
-            structlog.stdlib.add_log_level,
-            structlog.stdlib.PositionalArgumentsFormatter(),
-            timestamper,
-            structlog.processors.StackInfoRenderer(),
-            structlog.processors.format_exc_info,
-            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
-        ],
-        logger_factory=structlog.stdlib.LoggerFactory(),
-        wrapper_class=structlog.stdlib.BoundLogger,
-        cache_logger_on_first_use=True,
+    logging.basicConfig(
+        level=level,
+        force=True,
+        handlers=handlers
     )
 
 
-def _get_console_output_processors():
-    if sys.stderr.isatty():
-        processors = [
-            structlog.dev.ConsoleRenderer()
-        ]
-    else:
-        processors = [
-            structlog.processors.dict_tracebacks,
-            structlog.processors.JSONRenderer()
-        ]
+def handle_exception(exc_type, exc_value, traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, traceback)
+        return
 
-    return processors
+    logger.exception(
+        "Uncaught exception",
+        exc_info=(exc_type, exc_value, traceback)
+    )
 
 
-def get_logger(*args, **kwargs) -> structlog.stdlib.BoundLogger:
-    return structlog.get_logger(*args, **kwargs)
+if __name__ == '__main__':
+    init()
+    logger.info("test it")

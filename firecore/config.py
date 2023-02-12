@@ -1,10 +1,10 @@
 from rjsonnet import evaluate_file, evaluate_snippet
 import json
 from typing import Dict, Any, overload, Optional, Union, List, Callable, Tuple
-from .logging import get_logger
+import logging
 
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 ImportCallback = Callable[[str, str], Tuple[str, Optional[str]]]
 

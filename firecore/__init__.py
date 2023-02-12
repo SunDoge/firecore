@@ -3,5 +3,6 @@ from .resolver import resolve
 
 from . import logging
 from . import config
+from . import logging
 
 # __version__ = "0.0.1"
