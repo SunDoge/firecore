@@ -38,7 +38,10 @@ def _resolve_dict(cfg: Dict[str, Any], **extra_kwargs) -> Dict[str, Any]:
 def _resolve_object(cfg: Dict[str, Any], **extra_kwargs) -> Any:
     call_name = cfg[KEY_CALL]
     args, kwargs = _resolve_args_kwargs(KEY_CALL, cfg, **extra_kwargs)
-    return require(call_name)(*args, **kwargs)
+    try:
+        return require(call_name)(*args, **kwargs)
+    except Exception as e:
+        raise Exception(f"Fail to create {call_name}", e)
 
 
 def _resolve_partial(cfg: Dict[str, Any], **extra_kwargs) -> functools.partial:

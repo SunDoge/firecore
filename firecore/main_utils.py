@@ -1,5 +1,6 @@
 from typing import Callable, Optional, TypeVar, Union
 import inspect
+from .import_utils import require
 
 T = TypeVar('T')
 
@@ -7,7 +8,7 @@ T = TypeVar('T')
 def _main_fn(func: T) -> T:
     # 拿到调用这个函数的 FrameInfo
     caller = inspect.stack()[2]
-
+    # import ipdb; ipdb.set_trace()
     # 拿到 __name__
     name = caller.frame.f_globals['__name__']
 
