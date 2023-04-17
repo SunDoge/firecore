@@ -3,6 +3,8 @@ import json
 from typing import Dict, Any, overload, Optional, Union, List, Callable, Tuple
 import logging
 
+from .lazy import LazyCall, LazyConfig
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +25,12 @@ def from_file(
     max_trace: int = 20,
     import_callback: Optional[ImportCallback] = None,
     native_callbacks: Dict[str, Tuple[str, Callable]] = {},
-) -> Dict[str, Any]: ...
+) -> Dict[str, Any]:
+    ...
 
 
 def from_file(filename: str, **kwargs) -> Dict[str, Any]:
-    logger.debug('eval file', filename=filename, kwargs=kwargs)
+    logger.debug("eval file", filename=filename, kwargs=kwargs)
     json_str = evaluate_file(filename, **kwargs)
     config = json.loads(json_str)
     return config
@@ -48,11 +51,14 @@ def from_snippet(
     max_trace: int = 20,
     import_callback: Optional[ImportCallback] = None,
     native_callbacks: Dict[str, Tuple[str, Callable]] = {},
-) -> Dict[str, Any]: ...
+) -> Dict[str, Any]:
+    ...
 
 
-def from_snippet(snippet: str, filename: str = 'snippet.jsonnet', **kwargs) -> Dict[str, Any]:
-    logger.debug('eval snippet', filename=filename, kwargs=kwargs)
+def from_snippet(
+    snippet: str, filename: str = "snippet.jsonnet", **kwargs
+) -> Dict[str, Any]:
+    logger.debug("eval snippet", filename=filename, kwargs=kwargs)
     json_str = evaluate_snippet(filename, snippet, **kwargs)
     config = json.loads(json_str)
     return config
