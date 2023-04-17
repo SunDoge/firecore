@@ -16,7 +16,7 @@ class TestLazyPythonConfig(unittest.TestCase):
         self.root_filename = os.path.join(os.path.dirname(__file__), "root_cfg.py")
 
     def test_load(self):
-        cfg = LazyConfig.load(self.black)
+        cfg = LazyConfig.load(self.root_filename)
 
         self.assertEqual(cfg.dir1a_dict.a, "modified")
         self.assertEqual(cfg.dir1b_dict.a, 1)
