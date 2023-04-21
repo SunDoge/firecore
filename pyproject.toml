@@ -13,8 +13,10 @@ numpy = ">=1.22"
 rjsonnet = ">=0.4.5,<0.6.0"
 structlog = "^22.3.0"
 rich = ">=12.6,<14.0"
-hydra-core = "^1.3.2"
+omegaconf = "^2.3.0"
 black = "^23.3.0"
+hydra-core = "^1.3.2"
+cloudpickle = "*"
 
 
 [tool.poetry.group.dev.dependencies]
