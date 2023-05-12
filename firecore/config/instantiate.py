@@ -200,6 +200,7 @@ def instantiate_cfg(cfg: Any, recursive: bool = True):
                     kwargs[key] = value
             return _call_target(_target_, kwargs)
         else:
-            return cfg
+            # return cfg
+            return {k: instantiate_cfg(v) for k, v in cfg.items()}
     else:
         return cfg  # return as-is if don't know what to do
