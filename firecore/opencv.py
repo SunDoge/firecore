@@ -16,7 +16,8 @@ def read_rgb(filename: str) -> np.ndarray:
 
 def cv2_worker_init_fn(worker_id: int):
     cv2.setNumThreads(0)
-    logger.info("cv2 get num threads: %d", cv2.getNumThreads())
+    logger.info("worker_id: %d cv2 get num threads: %d",
+                worker_id, cv2.getNumThreads())
 
 
 def decode_from_buffer(buf: bytes, flags: int = cv2.IMREAD_COLOR) -> np.ndarray:
