@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "firecore"
-version = "0.5.1"
+version = "0.6.0"
 description = ""
 authors = ["SunDoge <384813529@qq.com>"]
 license = "Apache 2.0"
