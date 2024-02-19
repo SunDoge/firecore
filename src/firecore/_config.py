@@ -2,10 +2,8 @@ from pydantic import BaseModel
 import argparse
 from argparse import ArgumentParser
 import typing
-import logging
 from typing import Dict, Any, Type, TypeVar, Optional, Union
-
-logger = logging.getLogger(__name__)
+from loguru import logger
 
 
 _NoneType = type(None)
@@ -132,48 +130,15 @@ def assign_arguments(options: Dict[str, Any], parsed: Dict[str, Any], prefix: st
     for key, value in parsed.items():
         if not key.startswith(prefix):
             continue
+
+        key = key[len(prefix) :]
         parts = key.split(".")
+        # print(parts)
         dict_ref = options
         for part in parts[:-1]:
             dict_ref = dict_ref[part]
-        dict_ref[parts[-1]] = value
 
-
-class Hparams(BaseModel):
-    optim: typing.Optional[str] = "sgd"
-    bool_value: bool = True
-
-    class Train(BaseModel):
-        batch_size: int = 4
-        file_list: typing.List[bool] = []
-
-    train: Train = Train()
-
-    class Val(BaseModel):
-        batch_size: int = 8
-
-    val: Val = Val()
-
-
-def _main():
-    from icecream import ic
-
-    logging.basicConfig(level=logging.DEBUG)
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dv", default=1)
-    add_arguments(parser, Hparams())
-    ns = parser.parse_args()
-    ic(ns)
-    ic(ns.__dict__)
-
-    options = Hparams()
-    ic(options)
-    options_dict = options.model_dump()
-    assign_arguments(options_dict, ns.__dict__)
-    options2 = Hparams.model_validate(options_dict)
-    ic(options2)
-
-
-if __name__ == "__main__":
-    _main()
+        _key = parts[-1]
+        if dict_ref[_key] != value:
+            logger.info("modify {}: {} => {}", key, dict_ref[_key], value)
+            dict_ref[_key] = value
