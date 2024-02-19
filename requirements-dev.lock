@@ -23,6 +23,8 @@ loguru==0.7.2
     # via firecore
 numpy==1.26.4
     # via firecore
+    # via opencv-python-headless
+opencv-python-headless==4.9.0.80
 packaging==23.2
     # via pytest
 pluggy==1.4.0
