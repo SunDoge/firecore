@@ -1,11 +1,10 @@
 import argparse
-from typing import Callable, Optional, Type, TypeVar, Generic
+from typing import Optional, Type, TypeVar, Generic
 import rtoml
 from pathlib import Path
 from pydantic import BaseModel
 from ._config import add_arguments, assign_arguments
 from loguru import logger
-import inspect
 from datetime import datetime
 from contextlib import contextmanager
 
@@ -19,12 +18,12 @@ class Context(BaseModel, Generic[ModelType]):
     config: ModelType
 
     @property
-    def save_dir(self):
-        return (
-            self.working_dir
-            / self.experiment_name
-            / self.started_at.strftime("%Y-%m-%d-%H-%M-%S")
-        )
+    def experiment_dir(self):
+        return self.working_dir / self.experiment_name
+
+    @property
+    def experiment_dir_with_timestamp(self):
+        self.experiment_dir / self.started_at.strftime("%Y-%m-%d-%H-%M-%S")
 
     def save_config(self):
         path = self.save_dir / "config.toml"

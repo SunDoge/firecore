@@ -16,10 +16,12 @@ class Config(BaseModel):
     val: Val = Val()
 
 
+
+
+
 def main():
     with start_training(Config) as ctx:
         print(ctx.config)
-        print(ctx.save_dir)
 
 
 if __name__ == "__main__":
