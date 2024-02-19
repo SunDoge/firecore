@@ -10,14 +10,16 @@
 -e file:.
 annotated-types==0.6.0
     # via pydantic
-firecore-config==0.1.0
+loguru==0.7.2
     # via firecore
 numpy==1.26.4
     # via firecore
 pydantic==2.6.1
-    # via firecore-config
+    # via firecore
 pydantic-core==2.16.2
     # via pydantic
+rtoml==0.10.0
+    # via firecore
 typing-extensions==4.9.0
     # via pydantic
     # via pydantic-core
