@@ -28,10 +28,12 @@ jobs:
           cache-prefix: "py${{ matrix.python-version }}"
 
       - name: python version
-        run: rye pin ${{ matrix.python-version }}
-
+        run: |
+          rye config --set-bool behavior.use-uv=true
+          rye pin ${{ matrix.python-version }}
+          
       - name: Install dependencies
-        run: rye sync --no-dev
+        run: rye sync
 
       - name: Test with pytest
         run: rye run pytest
