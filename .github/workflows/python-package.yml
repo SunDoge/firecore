@@ -5,33 +5,35 @@ name: Python package
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - uses: Gr1N/setup-poetry@v8
-    - uses: actions/cache@v2
-      with:
-        path: ~/.cache/pypoetry/virtualenvs
-        key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
-    - run: poetry --version
-    - name: Install dependencies
-      run: poetry install
-    - name: Test with pytest
-      run: |
-        poetry run pytest
+      - uses: actions/checkout@v4
+      
+      - name: Setup rye
+        id: setup-rye
+        uses: eifinger/setup-rye@v1
+        with:
+          enable-cache: true
+          cache-prefix: "py${{ matrix.python-version }}"
+
+      - name: python version
+        run: |
+          rye config --set-bool behavior.use-uv=true
+          rye pin ${{ matrix.python-version }}
+          
+      - name: Install dependencies
+        run: rye sync
+
+      - name: Test with pytest
+        run: rye run pytest
