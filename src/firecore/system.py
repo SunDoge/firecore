@@ -21,7 +21,7 @@ def ulimit_n_max():
     """Raise ulimit to its max value
     在某些情况下，dataloader会把文件描述符用完，使用这个函数保证实验运行
     """
-    if not 'linux' in sys.platform:
+    if 'linux' not in sys.platform:
         logger.warning('this is only supported on linux')
         return
 

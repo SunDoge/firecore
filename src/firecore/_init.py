@@ -12,18 +12,13 @@ ModelType = TypeVar("ModelType", bound=BaseModel)
 
 
 class Context(BaseModel, Generic[ModelType]):
-    working_dir: Path
-    experiment_name: str
+    workdir: Path
     started_at: datetime
     config: ModelType
 
     @property
     def experiment_dir(self):
-        return self.working_dir / self.experiment_name
-
-    @property
-    def experiment_dir_with_timestamp(self):
-        self.experiment_dir / self.started_at.strftime("%Y-%m-%d-%H-%M-%S")
+        return self.workdir / self.started_at.strftime("%Y-%m-%d-%H-%M-%S")
 
     def save_config(self):
         path = self.save_dir / "config.toml"
@@ -70,13 +65,13 @@ def start_training(model_class: Type[ModelType]):
     config = load_or_parse_config(ns, model_class)
 
     ctx = Context(
-        working_dir=working_dir,
+        workdir=working_dir,
         experiment_name=experiment_name,
         started_at=datetime.now(),
         config=config,
     )
 
-    ctx.save_dir.mkdir(parents=True, exist_ok=True)
+    ctx.experiment_dir.mkdir(parents=True, exist_ok=True)
 
     yield ctx
 
