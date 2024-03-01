@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 import typing
 from typing import Dict, Any, Type, TypeVar, Optional, Union
 from loguru import logger
+import enum
 
 
 _NoneType = type(None)
@@ -33,6 +34,12 @@ def add_arguments(
                     field.default,
                     name_prefix=name,
                     dest_prefix=dest,
+                )
+                continue
+
+            if issubclass(field.annotation, enum.Enum):
+                add_typed_argument(
+                    group, name, dest, field.default, StrToEnum(field.annotation)
                 )
                 continue
 
@@ -102,7 +109,7 @@ def add_typed_list_argument(
         name,
         dest=dest,
         default=default,
-        type=str_to_bool if type is bool else type,
+        type=type,
         help=f"(default: List[{type.__name__}] = {default})",
         nargs=argparse.ZERO_OR_MORE,
     )
@@ -130,3 +137,18 @@ def assign_arguments(options: Dict[str, Any], parsed: Dict[str, Any], prefix: st
         if dict_ref[_key] != value:
             logger.info("modify {}: {} => {}", key, dict_ref[_key], value)
             dict_ref[_key] = value
+
+    
+    return options
+
+
+class StrToEnum:
+    def __init__(self, enum_class) -> None:
+        self._enum_class = enum_class
+
+    def __call__(self, key: str):
+        return self._enum_class[key]
+
+    @property
+    def __name__(self):
+        return self._enum_class.__name__
