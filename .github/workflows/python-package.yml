@@ -29,7 +29,6 @@ jobs:
 
       - name: python version
         run: |
-          rye config --set-bool behavior.use-uv=true
           rye pin ${{ matrix.python-version }}
           
       - name: Install dependencies
