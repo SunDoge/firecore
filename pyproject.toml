@@ -1,6 +1,6 @@
 [project]
 name = "firecore"
-version = "0.1.0"
+version = "0.6.0a0"
 description = "Add your description here"
 authors = [
     { name = "SunDoge", email = "triplez0@outlook.com" }
