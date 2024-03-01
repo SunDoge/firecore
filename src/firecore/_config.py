@@ -9,18 +9,6 @@ from loguru import logger
 _NoneType = type(None)
 
 
-def str_to_bool(x: Union[str, bool]) -> bool:
-    if isinstance(x, bool):
-        return x
-    x_lower = x.lower()
-    if x_lower in ["1", "yes", "true", "t", "y"]:
-        return True
-    elif x_lower in ["0", "no", "false", "f", "n"]:
-        return False
-    else:
-        raise argparse.ArgumentTypeError("Boolean value expected.")
-
-
 def add_arguments(
     parser: ArgumentParser,
     model: BaseModel,
@@ -48,10 +36,10 @@ def add_arguments(
                 )
                 continue
 
-            # if field.annotation is bool:
-            #     # add --flag and --no-flag
-            #     # add_bool_argument(group, name, dest, field.default)
-            #     continue
+            if field.annotation is bool:
+                # add --flag and --no-flag
+                add_bool_argument(group, name, dest, field.default)
+                continue
 
             add_typed_argument(group, name, dest, field.default, field.annotation)
             continue
@@ -98,7 +86,7 @@ def add_typed_argument(
         name,
         dest=dest,
         default=default,
-        type=str_to_bool if type is bool else type,
+        type=type,
         help=f"(default: {type.__name__} = {default})",
     )
 
