@@ -10,6 +10,8 @@ from contextlib import contextmanager
 
 ModelType = TypeVar("ModelType", bound=BaseModel)
 
+DEST_PREFIX = "CFG."
+
 
 class Context(BaseModel, Generic[ModelType]):
     workdir: Path
@@ -32,7 +34,6 @@ def configure_argument_parser(parser: argparse.ArgumentParser):
     parser.add_argument(
         "-w", "--workdir", type=Path, default="/tmp", help="Path to working dir."
     )
-    parser.add_argument("-n", "--name", type=str, required=True)
 
 
 def load_or_parse_config(
@@ -41,38 +42,30 @@ def load_or_parse_config(
     config_path: Optional[Path] = ns.config
     if config_path is not None:
         with config_path.open("r") as f:
-            parsed_config = rtoml.load(f)
+            config_dict = rtoml.load(f)
     else:
-        parsed_config = model_class().model_dump()
+        config_dict = model_class().model_dump()
 
-    assign_arguments(parsed_config, ns.__dict__, prefix="CFG.")
-
-    config = model_class.model_validate(parsed_config)
+    assign_arguments(config_dict, ns.__dict__, dest_prefix=DEST_PREFIX)
+    config = model_class.model_validate(config_dict)
     return config
 
 
-@contextmanager
-def start_training(model_class: Type[ModelType]):
-    parser = argparse.ArgumentParser()
+def prepare_parser(
+    config_class: Type[ModelType], parser: Optional[argparse.ArgumentParser] = None
+):
+    if parser is None:
+        parser = argparse.ArgumentParser()
     configure_argument_parser(parser)
-    add_arguments(parser, model_class(), dest_prefix="CFG")
+    add_arguments(parser, config_class(), dest_prefix=DEST_PREFIX)
+    return parser
 
-    ns = parser.parse_args()
 
-    working_dir: Path = ns.workdir
-    experiment_name: str = ns.name
+def make_dir_with_index_and_timestamp(root_dir: Path):
+    sub_dirs = list(root_dir.iterdir())
+    index = len(sub_dirs)
 
-    config = load_or_parse_config(ns, model_class)
 
-    ctx = Context(
-        workdir=working_dir,
-        experiment_name=experiment_name,
-        started_at=datetime.now(),
-        config=config,
-    )
-
-    ctx.experiment_dir.mkdir(parents=True, exist_ok=True)
-
-    yield ctx
-
-    ctx.save_config()
+@contextmanager
+def start_training(config_class: Type[ModelType]):
+    pass

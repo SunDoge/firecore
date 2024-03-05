@@ -13,13 +13,13 @@ _NoneType = type(None)
 def add_arguments(
     parser: ArgumentParser,
     model: BaseModel,
-    name_prefix: str = "-",
+    name_prefix: str = "--",
     dest_prefix: str = "",
 ):
     group = parser.add_argument_group(title=f"{model.__class__.__qualname__}")
     for key, field in model.model_fields.items():
-        name = name_prefix + "-" + key.replace("_", "-")
-        dest = (dest_prefix + "." + key) if dest_prefix else key
+        name = name_prefix + key.replace("_", "-")
+        dest = dest_prefix + key
 
         logger.debug(f"name={name}, dest={dest}, key={key}, field={field}")
 
@@ -32,14 +32,8 @@ def add_arguments(
                 add_arguments(
                     parser,
                     field.default,
-                    name_prefix=name,
-                    dest_prefix=dest,
-                )
-                continue
-
-            if issubclass(field.annotation, enum.Enum):
-                add_typed_argument(
-                    group, name, dest, field.default, StrToEnum(field.annotation)
+                    name_prefix=name + "-",
+                    dest_prefix=dest + ".",
                 )
                 continue
 
@@ -89,6 +83,9 @@ def add_typed_argument(
     default: Optional[T],
     type: Type[T],
 ):
+    if issubclass(type, enum.Enum):
+        type = StrToEnum(type)
+        
     parser.add_argument(
         name,
         dest=dest,
@@ -121,12 +118,14 @@ def get_not_none(xs):
     return rest[0]
 
 
-def assign_arguments(options: Dict[str, Any], parsed: Dict[str, Any], prefix: str = ""):
+def assign_arguments(
+    options: Dict[str, Any], parsed: Dict[str, Any], dest_prefix: str = ""
+):
     for key, value in parsed.items():
-        if not key.startswith(prefix):
+        if not key.startswith(dest_prefix):
             continue
 
-        key = key[len(prefix) :]
+        key = key[len(dest_prefix) :]
         parts = key.split(".")
         # print(parts)
         dict_ref = options
@@ -138,7 +137,6 @@ def assign_arguments(options: Dict[str, Any], parsed: Dict[str, Any], prefix: st
             logger.info("modify {}: {} => {}", key, dict_ref[_key], value)
             dict_ref[_key] = value
 
-    
     return options
 
 
@@ -146,8 +144,11 @@ class StrToEnum:
     def __init__(self, enum_class) -> None:
         self._enum_class = enum_class
 
-    def __call__(self, key: str):
-        return self._enum_class[key]
+    def __call__(self, key: Optional[str]):
+        if key is None:
+            return None
+        else:
+            return self._enum_class[key]
 
     @property
     def __name__(self):

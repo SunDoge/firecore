@@ -42,6 +42,20 @@ def test_add_enum():
     assert ns.data == Options.Data.v2
 
 
+def test_prefix():
+    class Options(BaseModel):
+        foo: str = "123"
+
+    prefix = "CFG."
+
+    parser = argparse.ArgumentParser()
+    add_arguments(parser, Options(), dest_prefix=prefix)
+    ns = parser.parse_args(["--foo", "321"])
+    d = assign_arguments(Options().model_dump(), ns.__dict__, dest_prefix=prefix)
+    opt = Options.model_validate(d)
+    assert opt.foo == "321"
+
+
 def help_enum():
     class Options(BaseModel):
         class Data(enum.Enum):
@@ -58,5 +72,21 @@ def help_enum():
     print(opt)
 
 
+def help_prefix():
+    class Options(BaseModel):
+        foo: str = "123"
+
+    prefix = "CFG."
+
+    parser = argparse.ArgumentParser()
+    add_arguments(parser, Options(), dest_prefix=prefix)
+    ns = parser.parse_args()
+    print(ns)
+    d = assign_arguments(Options().model_dump(), ns.__dict__, dest_prefix=prefix)
+    opt = Options.model_validate(d)
+    print(opt)
+
+
 if __name__ == "__main__":
-    help_enum()
+    # help_enum()
+    help_prefix()
