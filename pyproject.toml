@@ -17,6 +17,14 @@ requires-python = ">= 3.9"
 [project.scripts]
 hello = "firecore:hello"
 
+[project.optional-dependencies]
+pytorch = [
+    "torch>=2.2.1",
+    "torchvision>=0.17.1",
+]
+
+
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -29,6 +37,8 @@ dev-dependencies = [
     "opencv-python-headless>=4.9.0.80",
     "fire>=0.5.0",
     "ipython>=8",
+    "torch>=2.2.1",
+    "rich>=13.7.1",
 ]
 
 [tool.hatch.metadata]
@@ -36,3 +46,8 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/firecore"]
+
+[[tool.rye.sources]]
+name = "torch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+type = "index"
