@@ -17,11 +17,7 @@ requires-python = ">= 3.9"
 [project.scripts]
 hello = "firecore:hello"
 
-[project.optional-dependencies]
-pytorch = [
-    "torch>=2.2.1",
-    "torchvision>=0.17.1",
-]
+
 
 
 
@@ -37,7 +33,7 @@ dev-dependencies = [
     "opencv-python-headless>=4.9.0.80",
     "fire>=0.5.0",
     "ipython>=8",
-    "torch>=2.2.1",
+    "torch==2.2.1+cpu",
     "rich>=13.7.1",
 ]
 
@@ -48,6 +44,5 @@ allow-direct-references = true
 packages = ["src/firecore"]
 
 [[tool.rye.sources]]
-name = "torch-cpu"
+name = "pytorch"
 url = "https://download.pytorch.org/whl/cpu"
-type = "index"
