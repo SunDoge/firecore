@@ -18,7 +18,7 @@ def require(name: str):
     return attribute
 
 
-def _instantiate_if_is_node(x, recursive: bool):
+def _instantiate(x, recursive: bool):
     if isinstance(x, Node):
         return x.instantiate(recursive=recursive)
     else:
@@ -41,17 +41,22 @@ class Node(BaseModel):
     def target(self):
         return require(self.path)
 
-    def instantiate(self, recursive: bool = True):
+    def instantiate(self, recursive: bool):
         if recursive:
-            args = [_instantiate_if_is_node(x, recursive=recursive) for x in self.args]
-            kwargs = {
-                k: _instantiate_if_is_node(v, recursive=recursive)
-                for k, v in self.kwargs.items()
-            }
+            args = [_instantiate(x, recursive) for x in self.args]
+            kwargs = {k: _instantiate(v, recursive) for k, v in self.kwargs.items()}
         else:
             args = self.args
             kwargs = self.kwargs
         return self.target(*args, **kwargs)
+
+    def __getitem__(self, key: str | int):
+        if isinstance(key, int):
+            return self.args[key]
+        elif isinstance(key, str):
+            return self.kwargs[key]
+        else:
+            raise Exception
 
 
 def _get_target_path(target):
@@ -70,9 +75,7 @@ def main():
     from firecore.params import AllParams
     import rtoml
 
-    cfg: Node = LazyCall(decode_rgb_image)(buf=b"1", c=LazyCall(AllParams))
-    print(rtoml.dumps(cfg.model_dump(exclude_unset=True)))
-    print(cfg.target)
+    
 
 
 if __name__ == "__main__":
