@@ -1,5 +1,5 @@
 import importlib.util
-from .lazy import Node
+from .lazy import instantiate
 
 
 def evaluate_file(path: str):
@@ -14,27 +14,10 @@ def evaluate_config(path: str):
     return getattr(module, "config")
 
 
-def _is_node(x):
-    return isinstance(x, dict) and "path" in x and "args" in x and "kwargs" in x
 
 
-def _to_node(x):
-    if _is_node(x):
-        args = x["args"]
-        if args is not None:
-            args = [_to_node(v) for v in args]
-
-        kwargs = x["kwargs"]
-        if kwargs is not None:
-            kwargs = {k: _to_node(v) for k, v in kwargs.items()}
-
-        return Node(path=x["path"], args=args, kwargs=kwargs)
-
-    return x
 
 
-def dict_to_config(x: dict):
-    return _to_node(x)
 
 
 if __name__ == "__main__":
@@ -43,6 +26,14 @@ if __name__ == "__main__":
 
     import rtoml
 
-    config: Node = evaluate_config(sys.argv[1])
+    config: dict = evaluate_config(sys.argv[1])
     rich.print(config)
-    rich.print(dict_to_config(config.model_dump()))
+    rich.print(instantiate(config))
+    print(rtoml.dumps(config))
+
+    outs = instantiate(config)
+    model = outs['model']
+    params = outs['params'](model)
+    optimizer = outs['optimizer'](params)
+    lr_scheduler = outs['lr_scheduler'](optimizer)
+    print(model, params, optimizer, lr_scheduler)
