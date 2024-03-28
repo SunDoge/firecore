@@ -78,8 +78,6 @@ pygments==2.17.2
     # via rich
 pytest==8.0.1
 rich==13.7.1
-rtoml==0.10.0
-    # via firecore
 six==1.16.0
     # via asttokens
     # via fire

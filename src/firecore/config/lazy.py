@@ -85,7 +85,6 @@ def _is_lazy_config(x):
 def main():
     from firecore.opencv import decode_rgb_image
     from firecore.params import AllParams
-    import rtoml
 
     print(LazyCall(decode_rgb_image)(buf="123", c=1))
 
