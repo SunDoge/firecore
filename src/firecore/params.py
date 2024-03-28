@@ -6,6 +6,7 @@ def get_all(model: nn.Module):
     return model.parameters()
 
 
-class AllParams:
-    def __call__(self, model: nn.Module) -> Any:
-        return model.parameters()
+def filter_by_prefix(model: nn.Module, prefix: str):
+    for key, value in model.named_parameters():
+        if key.startswith(prefix):
+            yield value

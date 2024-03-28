@@ -74,6 +74,8 @@ def instantiate(config):
         return _instantiate_dict(config)
     elif isinstance(config, list):
         return [instantiate(x) for x in config]
+    elif isinstance(config, tuple):
+        return tuple(instantiate(x) for x in config)
     else:
         return config
 
