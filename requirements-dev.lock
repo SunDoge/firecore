@@ -105,6 +105,7 @@ torchvision==0.17.0
 traitlets==5.14.1
     # via ipython
     # via matplotlib-inline
+typed-args==0.6.4
 typing-extensions==4.8.0
     # via pydantic
     # via pydantic-core

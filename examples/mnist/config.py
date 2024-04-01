@@ -17,6 +17,7 @@ trans = LazyCall(transforms.Compose)(
 )
 
 config = types.Config(
+    strategy=types.Strategy(max_epochs=14),
     model=LazyCall(Net)(),
     params=LazyPartial(get_all)(),
     optimizer=LazyPartial(torch.optim.Adadelta)(lr=1.0),

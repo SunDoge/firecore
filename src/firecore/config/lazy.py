@@ -1,6 +1,5 @@
-from typing import TypeVar, Any, List, Dict, TypedDict, Literal
+from typing import TypeVar, TypedDict, Literal
 from loguru import logger
-from pydantic import BaseModel
 import importlib
 import functools
 import importlib.util
@@ -18,7 +17,7 @@ def require(name: str):
     return attribute
 
 
-class LazyConfig(TypedDict):
+class LazyNode(TypedDict):
     _path_: str
     _type_: Literal["call", "import", "partial"]
 
@@ -32,20 +31,20 @@ T = TypeVar("T")
 
 def LazyCall(target: T) -> T:
     def f(**kwargs):
-        return LazyConfig(_path_=_get_target_path(target), _type_="call", **kwargs)
+        return LazyNode(_path_=_get_target_path(target), _type_="call", **kwargs)
 
     return f
 
 
 def LazyPartial(target: T) -> T:
     def f(**kwargs):
-        return LazyConfig(_path_=_get_target_path(target), _type_="partial", **kwargs)
+        return LazyNode(_path_=_get_target_path(target), _type_="partial", **kwargs)
 
     return f
 
 
 def LazyImport(target: T):
-    return LazyConfig(_path_=_get_target_path(target), _type_="import")
+    return LazyNode(_path_=_get_target_path(target), _type_="import")
 
 
 def _instantiate_dict(config: dict):
