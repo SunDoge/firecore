@@ -15,8 +15,13 @@ class Val(TypedDict):
     loader: Loader
 
 
+class Test(Val):
+    pass
+
+
 class Strategy(TypedDict):
     max_epochs: int
+    epoch_length: int | None
 
 
 class Config(TypedDict):
@@ -29,3 +34,4 @@ class Config(TypedDict):
 
     train: Train | None
     val: Val | None
+    test: Test | None

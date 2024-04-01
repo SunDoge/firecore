@@ -1,14 +1,8 @@
 import torch
 from torch import nn, Tensor
 import torch.nn.functional as F
-from pydantic import BaseModel
-import enum
-
 from loguru import logger
 import rich
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader
-from torch import optim
 import typed_args as ta
 from pathlib import Path
 from firecore.config.evaluate import evaluate_config
