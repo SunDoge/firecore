@@ -1,6 +1,6 @@
 [project]
 name = "firecore"
-version = "0.6.0a0"
+version = "0.6.0a1"
 description = "Add your description here"
 authors = [
     { name = "SunDoge", email = "triplez0@outlook.com" }
@@ -32,7 +32,6 @@ dev-dependencies = [
     "rich>=13.7.1",
     "ipdb>=0.13.13",
     "torchvision>=0.17",
-    "rtoml>=0.10.0",
     "typed-args>=0.6.4",
 ]
 
