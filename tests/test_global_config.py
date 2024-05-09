@@ -1,4 +1,4 @@
-from firecore.config.global_config import config
+from firecore.global_config import config
 from firecore.global_store import GLOBAL_STORE
 from typing import Dict
 
