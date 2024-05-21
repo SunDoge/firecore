@@ -1,6 +1,6 @@
 [project]
 name = "firecore"
-version = "0.6.0a1"
+version = "0.6.0a2"
 description = "Add your description here"
 authors = [
     { name = "SunDoge", email = "triplez0@outlook.com" }
@@ -28,11 +28,10 @@ dev-dependencies = [
     "opencv-python-headless>=4.9.0.80",
     "fire>=0.5.0",
     "ipython>=8",
-    "torch>=2.2",
     "rich>=13.7.1",
     "ipdb>=0.13.13",
-    "torchvision>=0.17",
     "typed-args>=0.6.4",
+    "torch==2.3.0+cpu",
 ]
 
 [tool.hatch.metadata]
