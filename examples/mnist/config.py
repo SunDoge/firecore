@@ -1,5 +1,5 @@
 from firecore.config.lazy import LazyCall, LazyPartial, LazyImport
-from firecore.config import types
+from firecore.config import _types
 from utils import Net
 from firecore.params import get_all
 import torch
@@ -16,13 +16,13 @@ trans = LazyCall(transforms.Compose)(
     ]
 )
 
-config = types.Config(
-    strategy=types.Strategy(max_epochs=14),
+config = _types.Config(
+    strategy=_types.Strategy(max_epochs=14),
     model=LazyCall(Net)(),
     params=LazyPartial(get_all)(),
     optimizer=LazyPartial(torch.optim.Adadelta)(lr=1.0),
     lr_scheduler=LazyPartial(torch.optim.lr_scheduler.StepLR)(step_size=1, gamma=0.7),
-    train=types.Train(
+    train=_types.Train(
         loader=LazyCall(DataLoader)(
             batch_size=64,
             num_workers=1,
@@ -36,7 +36,7 @@ config = types.Config(
             ),
         )
     ),
-    val=types.Val(
+    val=_types.Val(
         loader=LazyCall(DataLoader)(
             batch_size=1000,
             num_workers=1,

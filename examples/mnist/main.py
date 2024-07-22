@@ -7,7 +7,7 @@ import typed_args as ta
 from pathlib import Path
 from firecore.config.evaluate import evaluate_config
 from firecore.config.lazy import instantiate
-from firecore.config import types
+from firecore.config import _types
 
 
 @ta.dataclass
@@ -129,7 +129,7 @@ def main():
     # else:
     #     raise Exception()
 
-    config: types.Config = evaluate_config(str(args.config))
+    config: _types.Config = evaluate_config(str(args.config))
     rich.print(config)
 
     # rich.print(components)
