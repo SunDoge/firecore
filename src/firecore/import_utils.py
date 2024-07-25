@@ -1,8 +1,5 @@
 import importlib
-import logging
-
-
-logger = logging.getLogger(__name__)
+from loguru import logger
 
 
 def require(name: str):
@@ -12,5 +9,5 @@ def require(name: str):
     module_name, _sep, attribute_name = name.rpartition('.')
     module = importlib.import_module(module_name)
     attribute = getattr(module, attribute_name)
-    logger.debug('import `%s` from `%s`', attribute_name, module_name)
+    logger.debug(f'import `{attribute_name}` from `{module_name}`')
     return attribute

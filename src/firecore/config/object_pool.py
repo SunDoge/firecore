@@ -2,19 +2,22 @@ import typing
 
 from firecore.import_utils import require
 import functools
-import logging
+from pydantic import BaseModel, TypeAdapter
+from loguru import logger
 
-logger = logging.getLogger(__name__)
 
+ConfigType = typing.Dict[str, typing.Dict[str, typing.Any]]
+_config_adapter =TypeAdapter(ConfigType)
 
 class ObjectPool:
-    def __init__(self, config: dict) -> None:
-        self._config = config
-        self._pool = {}
+    def __init__(self, config: ConfigType) -> None:
+        self._config = _config_adapter.validate_python(config)
+        self._pool: typing.Dict[str, typing.Any] = {}
 
     def get(self, key: str):
         """
-
+        Args:
+            key: key in config
         Returns:
             singleton
         """
