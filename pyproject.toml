@@ -1,13 +1,13 @@
 [project]
 name = "firecore"
-version = "0.6.0a2"
-description = "Add your description here"
+version = "0.6.0a3"
+description = "Framework for fast and reproducable deep learning experiments"
 authors = [
     { name = "SunDoge", email = "triplez0@outlook.com" }
 ]
 dependencies = [
     "numpy>=1",
-    "pydantic>=2.6",
+    "pydantic>=2.8",
     "loguru>=0.7",
 ]
 readme = "README.md"
