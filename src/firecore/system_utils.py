@@ -1,9 +1,8 @@
 import socket
-import logging
 import sys
 import resource
+from loguru import logger
 
-logger = logging.getLogger(__name__)
 
 
 def find_free_port() -> int:
@@ -13,7 +12,7 @@ def find_free_port() -> int:
         s.bind(('', 0))
         _host, port = s.getsockname()
 
-    logger.debug("found a free port", port=port)
+    logger.debug("found a free port: {}", port)
     return port
 
 
