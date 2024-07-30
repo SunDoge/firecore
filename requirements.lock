@@ -19,6 +19,8 @@ pydantic==2.8.2
     # via firecore
 pydantic-core==2.20.1
     # via pydantic
+rjsonnet==0.5.4
+    # via firecore
 typing-extensions==4.8.0
     # via pydantic
     # via pydantic-core

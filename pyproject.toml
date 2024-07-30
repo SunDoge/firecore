@@ -1,6 +1,6 @@
 [project]
 name = "firecore"
-version = "0.6.0a3"
+version = "0.6.0a4"
 description = "Framework for fast and reproducable deep learning experiments"
 authors = [
     { name = "SunDoge", email = "triplez0@outlook.com" }
@@ -9,6 +9,7 @@ dependencies = [
     "numpy>=1",
     "pydantic>=2.8",
     "loguru>=0.7",
+    "rjsonnet>=0.5.4",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
