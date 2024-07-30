@@ -7,7 +7,8 @@ from loguru import logger
 
 
 ConfigType = typing.Dict[str, typing.Dict[str, typing.Any]]
-_config_adapter =TypeAdapter(ConfigType)
+_config_adapter = TypeAdapter(ConfigType)
+
 
 class ObjectPool:
     def __init__(self, config: ConfigType) -> None:
@@ -81,7 +82,7 @@ def _test():
 
     object_pool = ObjectPool(config)
     print(object_pool.get("linear"))
-    print(object_pool.get("dp").module is object_pool.get('linear'))
+    print(object_pool.get("dp").module is object_pool.get("linear"))
 
 
 if __name__ == "__main__":

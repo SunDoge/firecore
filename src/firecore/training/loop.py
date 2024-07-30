@@ -7,8 +7,6 @@ class TrainingLoop:
         pass
 
 
-
-
 def training_loop(data_source, forward_fn, loss_fn, epoch_length: int):
     for batch_idx in range(epoch_length):
         # metadata is unchanged

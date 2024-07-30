@@ -19,5 +19,3 @@ class Cycler(IterDataPipe[T]):
         while self.count is None or i < self.count:
             yield from self.source
             i += 1
-
-

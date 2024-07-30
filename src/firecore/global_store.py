@@ -14,6 +14,3 @@ class OnceStore:
 
 
 GLOBAL_STORE = OnceStore()
-
-
-

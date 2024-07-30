@@ -85,7 +85,7 @@ def add_typed_argument(
 ):
     if issubclass(type, enum.Enum):
         type = StrToEnum(type)
-        
+
     parser.add_argument(
         name,
         dest=dest,
