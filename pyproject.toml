@@ -1,6 +1,6 @@
 [project]
 name = "firecore"
-version = "0.6.0a4"
+version = "0.6.0a5"
 description = "Framework for fast and reproducable deep learning experiments"
 authors = [
     { name = "SunDoge", email = "triplez0@outlook.com" }

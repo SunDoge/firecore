@@ -2,12 +2,14 @@ import typing
 
 from firecore.import_utils import require
 import functools
-from pydantic import BaseModel, TypeAdapter
+from pydantic import TypeAdapter
 from loguru import logger
 
 
 ConfigType = typing.Dict[str, typing.Dict[str, typing.Any]]
 _config_adapter = TypeAdapter(ConfigType)
+
+_TYPE_KEY = "_type"
 
 
 class ObjectPool:
@@ -34,7 +36,7 @@ class ObjectPool:
 
     def _instantiate(self, config: typing.Any):
         if isinstance(config, dict):
-            if "type_" in config:
+            if _TYPE_KEY in config:
                 return self._instantiate_dict(config)
             else:
                 return {k: self._instantiate(v) for k, v in config.items()}
@@ -49,14 +51,11 @@ class ObjectPool:
             return config
 
     def _instantiate_dict(self, config: dict):
-        type_: str = config["type_"]
-        if type_ in self._pool:
-            logger.debug(f"reuse {type_}")
-            return self._pool[type_]
+        type_: str = config[_TYPE_KEY]
 
         kwargs = {}
         for key, value in config.items():
-            if key == "type_":
+            if key == _TYPE_KEY:
                 continue
             kwargs[key] = self._instantiate(value)
 
@@ -66,23 +65,26 @@ class ObjectPool:
         elif type_.startswith("partial:"):
             out = functools.partial(require(type_.split(":")[1]), **kwargs)
 
-        self._pool[type_] = out
         return out
+
+    def keys(self):
+        return self._pool.keys()
 
 
 def _test():
     config = {
         "linear": {
-            "type_": "call:torch.nn.Linear",
+            "_type": "call:torch.nn.Linear",
             "in_features": 2,
             "out_features": 4,
         },
-        "dp": {"type_": "call:torch.nn.DataParallel", "module": "ref:linear"},
+        "dp": {"_type": "call:torch.nn.DataParallel", "module": "ref:linear"},
     }
 
     object_pool = ObjectPool(config)
-    print(object_pool.get("linear"))
+    print('=' * 10)
     print(object_pool.get("dp").module is object_pool.get("linear"))
+    print(object_pool.keys())
 
 
 if __name__ == "__main__":
