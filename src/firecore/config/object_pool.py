@@ -6,16 +6,19 @@ from pydantic import TypeAdapter
 from loguru import logger
 
 
-ConfigType = typing.Dict[str, typing.Dict[str, typing.Any]]
+ConfigType = typing.Dict[str, typing.Any]
 _config_adapter = TypeAdapter(ConfigType)
 
 _TYPE_KEY = "_type"
 
 
 class ObjectPool:
-    def __init__(self, config: ConfigType) -> None:
+    def __init__(self, config: ConfigType, **kwargs) -> None:
         self._config = _config_adapter.validate_python(config)
+        self._config.update(kwargs)
         self._pool: typing.Dict[str, typing.Any] = {}
+
+        logger.debug("init pool keys: {}", self._pool.keys())
 
     def get(self, key: str):
         """
@@ -47,6 +50,8 @@ class ObjectPool:
                 return self.get(config.split(":")[1])
             elif config.startswith("import:"):
                 return require(config.split(":")[1])
+            else:
+                return config
         else:
             return config
 
@@ -82,7 +87,7 @@ def _test():
     }
 
     object_pool = ObjectPool(config)
-    print('=' * 10)
+    print("=" * 10)
     print(object_pool.get("dp").module is object_pool.get("linear"))
     print(object_pool.keys())
 
