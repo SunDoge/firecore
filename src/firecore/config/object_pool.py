@@ -76,6 +76,9 @@ class ObjectPool:
             out = require(type_.split(":")[1])(**kwargs)
         elif type_.startswith("partial:"):
             out = functools.partial(require(type_.split(":")[1]), **kwargs)
+        else:
+            logger.debug("type {} fallback to call", type_)
+            out = require(type_.split(":")[1])(**kwargs)
 
         return out
 
