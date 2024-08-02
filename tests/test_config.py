@@ -1,5 +1,6 @@
 import firecore
 from firecore.config.types import Config
+import pytest
 
 
 def test_basic():
@@ -34,3 +35,10 @@ def test_parent():
     assert object_pools.test.get("xx") == "yy"
     assert object_pools.val.get("xx") == "yy"
     assert object_pools.train.get("max_epochs") == 100
+
+    with pytest.raises(Exception):
+        object_pools.train.get("engine")
+
+    object_pools = config.build_object_pools(output_dir="fake_output_dir")
+    assert object_pools.train.get("engine")["output_dir"] == "fake_output_dir"
+    assert object_pools.train.get("engine") is not object_pools.val.get("engine")

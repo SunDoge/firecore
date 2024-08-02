@@ -5,19 +5,22 @@ import functools
 from pydantic import TypeAdapter
 from loguru import logger
 
-
-ConfigType = typing.Dict[str, typing.Any]
-_config_adapter = TypeAdapter(ConfigType)
+_PrimitiveType = typing.Union[bool, int, float, str, dict, list, None]
+_ConfigType = typing.Dict[str, _PrimitiveType]
+_config_adapter = TypeAdapter(_ConfigType)
 
 _TYPE_KEY = "_type"
 
 
 class ObjectPool:
     def __init__(
-        self, config: ConfigType, parent: typing.Optional["ObjectPool"] = None, **kwargs
+        self,
+        config: _ConfigType,
+        parent: typing.Optional["ObjectPool"] = None,
+        **kwargs,
     ) -> None:
-        self._config = _config_adapter.validate_python(config)
-        self._config.update(kwargs)
+        merged = {**config, **kwargs}
+        self._config = _config_adapter.validate_python(merged)
         self._pool: typing.Dict[str, typing.Any] = {}
         self._parent = parent
 
@@ -47,7 +50,7 @@ class ObjectPool:
     def _instantiate(self, config: typing.Any):
         if isinstance(config, dict):
             if _TYPE_KEY in config:
-                return self._instantiate_dict(config)
+                return self._instantiate_python_object(config)
             else:
                 return {k: self._instantiate(v) for k, v in config.items()}
         elif isinstance(config, list):
@@ -62,7 +65,10 @@ class ObjectPool:
         else:
             return config
 
-    def _instantiate_dict(self, config: dict):
+    def _instantiate_python_object(self, config: dict):
+        """
+        Create python object
+        """
         type_: str = config[_TYPE_KEY]
 
         kwargs = {}
