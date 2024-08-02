@@ -13,10 +13,13 @@ _TYPE_KEY = "_type"
 
 
 class ObjectPool:
-    def __init__(self, config: ConfigType, **kwargs) -> None:
+    def __init__(
+        self, config: ConfigType, parent: typing.Optional["ObjectPool"] = None, **kwargs
+    ) -> None:
         self._config = _config_adapter.validate_python(config)
         self._config.update(kwargs)
         self._pool: typing.Dict[str, typing.Any] = {}
+        self._parent = parent
 
         logger.debug("init pool keys: {}", self._pool.keys())
 
@@ -27,7 +30,11 @@ class ObjectPool:
         Returns:
             singleton
         """
-        logger.info("key: {}", key)
+        logger.debug("key: {}", key)
+
+        if self._parent is not None and self._parent.is_in_config(key):
+            return self._parent.get(key)
+
         if key not in self._config:
             raise Exception(f"{key} not in config with keys {self._config.keys()}")
 
@@ -74,6 +81,15 @@ class ObjectPool:
 
     def keys(self):
         return self._pool.keys()
+
+    def is_empty(self):
+        return bool(self._config)
+
+    def is_in_config(self, key: str):
+        return key in self._config
+
+    def is_in_pool(self, key: str):
+        return key in self._pool
 
 
 def _test():
