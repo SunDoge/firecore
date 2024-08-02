@@ -7,7 +7,6 @@ import typed_args as ta
 from pathlib import Path
 
 
-
 @ta.dataclass
 class Args(ta.TypedArgs):
     no_cuda: bool = ta.add_argument("--no-cuda", action="store_true")

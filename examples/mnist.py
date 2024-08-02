@@ -155,7 +155,7 @@ def main():
     else:
         device = torch.device("cpu")
 
-    logger.info('device: {}', device)
+    logger.info("device: {}", device)
 
     train_kwargs = {
         "batch_size": config.train.batch_size,

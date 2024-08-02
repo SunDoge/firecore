@@ -16,9 +16,6 @@ class Config(BaseModel):
     val: Val = Val()
 
 
-
-
-
 def main():
     with start_training(Config) as ctx:
         print(ctx.config)
