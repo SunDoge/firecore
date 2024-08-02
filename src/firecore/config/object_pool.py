@@ -19,9 +19,8 @@ class ObjectPool:
         parent: typing.Optional["ObjectPool"] = None,
         **kwargs,
     ) -> None:
-        merged = {**config, **kwargs}
-        self._config = _config_adapter.validate_python(merged)
-        self._pool: typing.Dict[str, typing.Any] = {}
+        self._config = _config_adapter.validate_python(config)
+        self._pool: typing.Dict[str, typing.Any] = kwargs
         self._parent = parent
 
         logger.debug("init pool keys: {}", self._pool.keys())
@@ -33,19 +32,19 @@ class ObjectPool:
         Returns:
             singleton
         """
-        logger.debug("key: {}", key)
 
-        if self._parent is not None and self._parent.is_in_config(key):
+        if self._parent is not None and self._parent.contains(key):
             return self._parent.get(key)
+
+        if key in self._pool:
+            return self._pool[key]
 
         if key not in self._config:
             raise Exception(f"{key} not in config with keys {self._config.keys()}")
 
-        if key not in self._pool:
-            value = self._instantiate(self._config[key])
-            self._pool[key] = value
-
-        return self._pool[key]
+        value = self._instantiate(self._config[key])
+        self._pool[key] = value
+        return value
 
     def _instantiate(self, config: typing.Any):
         if isinstance(config, dict):
@@ -99,6 +98,9 @@ class ObjectPool:
 
     def is_in_pool(self, key: str):
         return key in self._pool
+
+    def contains(self, key: str):
+        return key in self._pool or key in self._config
 
 
 def _test():
