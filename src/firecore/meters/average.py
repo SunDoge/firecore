@@ -1,18 +1,17 @@
-import torch
-from torch import nn, Tensor
-from .base import BaseMeter
+import numpy as np
+from pydantic import BaseModel
 
 
-class AverageMeter(BaseMeter):
-    val: Tensor
-    sum: Tensor
-    count: Tensor
-    avg: Tensor
+class AverageMeter(BaseModel):
+    val: float = 0.0
+    sum: float = 0
+    count: int = 0
 
-    def __init__(self):
-        super().__init__()
-        self.register_buffer("val", torch.tensor(0.0))
-        self.register_buffer("sum")
+    def update(self, val: float, n: int = 1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
 
-    def reset(self):
-        return super().reset()
+    @property
+    def avg(self):
+        return self.sum / self.count

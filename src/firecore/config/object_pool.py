@@ -103,21 +103,5 @@ class ObjectPool:
         return key in self._pool or key in self._config
 
 
-def _test():
-    config = {
-        "linear": {
-            "_type": "call:torch.nn.Linear",
-            "in_features": 2,
-            "out_features": 4,
-        },
-        "dp": {"_type": "call:torch.nn.DataParallel", "module": "ref:linear"},
-    }
-
-    object_pool = ObjectPool(config)
-    print("=" * 10)
-    print(object_pool.get("dp").module is object_pool.get("linear"))
-    print(object_pool.keys())
-
-
 if __name__ == "__main__":
-    _test()
+    pass
