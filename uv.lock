@@ -110,7 +110,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "ipdb" },
+    { name = "ipdb", specifier = ">=0.13.13" },
     { name = "opencv-python-headless", specifier = ">=4.10.0.84" },
     { name = "pytest", specifier = ">=8.3.2" },
     { name = "torch", specifier = ">=2.4.0" },
