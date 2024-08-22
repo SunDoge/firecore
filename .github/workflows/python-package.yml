@@ -20,19 +20,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup rye
-        id: setup-rye
-        uses: eifinger/setup-rye@v4
+      - uses: actions/setup-python@v4
         with:
-          enable-cache: true
-          cache-prefix: "py${{ matrix.python-version }}"
+          python-version: ${{ matrix.python-version }}
 
-      - name: python version
-        run: |
-          rye pin ${{ matrix.python-version }}
+      - uses: yezz123/setup-uv@v4
 
       - name: Install dependencies
-        run: rye sync
+        run: uv sync
 
       - name: Test with pytest
-        run: rye run pytest
+        run: uv run pytest
