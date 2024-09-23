@@ -20,14 +20,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: ${{ matrix.python-version }}
+          enable-cache: true
 
-      - uses: yezz123/setup-uv@v4
-
-      - name: Install dependencies
-        run: uv sync
+      - name: Set up Python
+        run: uv python install ${{ matrix.python-version }}
 
       - name: Test with pytest
-        run: uv run pytest
+        run: uv run --frozen pytest

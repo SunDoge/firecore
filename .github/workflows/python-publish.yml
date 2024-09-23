@@ -22,11 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
-
-      - uses: yezz123/setup-uv@v4
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
 
       - name: Publish
         run: |
-          uvx --from build pyproject-build --installer uv
+          uv build
           uvx twine upload dist/* -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
