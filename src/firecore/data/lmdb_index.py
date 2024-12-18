@@ -48,7 +48,7 @@ class LmdbIndex:
                 new_size = current_size * 2
                 self._env.set_mapsize(new_size)
 
-    def get(self, key: int) -> Optional[bytes]:
+    def get(self, key: int) -> Optional[memoryview]:
         """获取键对应的值
 
         Args:
@@ -57,7 +57,7 @@ class LmdbIndex:
             对应的值，如果不存在则返回None
         """
         key_bytes = self._get_key(key)
-        with self._env.begin() as txn:
+        with self._env.begin(buffers=True) as txn:
             value = txn.get(key_bytes)
             return value
 
